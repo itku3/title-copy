@@ -16,7 +16,7 @@ export const InputLink:React.FC<InputLinkProps> = ({onFetchTitle}) => {
   }
 
   return (
-  <div className="w-72 m-10">
+  <div className="w-72 m-10 items-center content-center justify-center flex">
   <div className="relative w-full min-w-[200px] h-10">
     <input
       onChange={(e) => setInputText(e.target.value)}

@@ -25,12 +25,9 @@ export default function Home() {
   return (
     <main>
       <div className="w-screen h-screen flex flex-col content-center items-center justify-center bg-[#F2F2F2]">
-        <div>
-        {title && artist && imgURL && (
-            <Info title={title} artist={artist} imgURL={imgURL}/>
-        )}
+    {title && artist && imgURL ? <Info title={title} artist={artist} imgURL={imgURL}/>:<h1 className=" font-extrabold text-transparent text-xl bg-clip-text bg-gradient-to-t from-[#3cba92] to-[#0ba360] text-center">input your Spotify songs URL.</h1>
+}
         <InputLink onFetchTitle={fetchTitle} />
-        </div>
       </div>
     </main>
   );
