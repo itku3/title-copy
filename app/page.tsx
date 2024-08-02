@@ -16,7 +16,7 @@ export default function Home() {
         setTitle(response.data.title);
         setArtist(response.data.artist);
         setImgURL(response.data.imgURL);
-        console.log(response.data)
+        //console.log(response.data)
     } catch (error) {
         console.error(error);
     }
