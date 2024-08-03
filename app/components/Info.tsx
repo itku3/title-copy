@@ -15,7 +15,7 @@ export const Info:React.FC<InfoProps> = ({title, artist, imgURL}) => {
         <>
             {title && artist && imgURL && (
                 <div className='shadow-xl border p-5 m-5 flex flex-col justify-center items-center'>
-                <Image className='mb-5 shadow-md' src={imgURL} alt="설명" width={300} height={300}/>
+                <Image onContextMenu={e=> e.preventDefault()} className='mb-5 shadow-md' src={imgURL} alt="설명" width={300} height={300}/>
                 <CopyToClipboard
                     text={info}
                     onCopy={() => alert("copyed. "+info)}
