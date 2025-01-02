@@ -8,6 +8,23 @@ interface InfoProps {
     imgURL: string;
 }
 
+/**
+ * Info 컴포넌트는 제목, 아티스트 및 이미지를 표시합니다.
+ * 제목, 아티스트 또는 둘 다 클립보드에 복사할 수 있는 옵션을 제공합니다.
+ *
+ * @component
+ * @example
+ * const title = "Song Title";
+ * const artist = "Artist Name";
+ * const imgURL = "https://example.com/image.jpg";
+ * return <Info title={title} artist={artist} imgURL={imgURL} />;
+ *
+ * @param {Object} props - 컴포넌트 props
+ * @param {string} props.title - 항목의 제목
+ * @param {string} props.artist - 항목의 아티스트
+ * @param {string} props.imgURL - 표시할 이미지의 URL
+ * @returns {JSX.Element} 렌더링된 Info 컴포넌트
+ */
 export const Info:React.FC<InfoProps> = ({title, artist, imgURL}) => {
     const info = title+" - "+artist
 

@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     const title = $('meta[property="og:title"]').attr('content');
     const artist = $('meta[property="og:description"]').attr('content')?.split('·')[0].trim();
     const imgURL = $('meta[property="og:image"]').attr('content');
-    
+  
     if (!title || !artist) {
       return NextResponse.json({ error: 'Unable to fetch song details' }, { status: 400 });
     }
