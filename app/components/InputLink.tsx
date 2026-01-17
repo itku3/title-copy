@@ -1,41 +1,56 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import { Search, Link } from 'lucide-react'
 
 interface InputLinkProps {
   onFetchTitle: (url: string) => void;
 }
 
-export const InputLink:React.FC<InputLinkProps> = ({onFetchTitle}) => {
+export const InputLink: React.FC<InputLinkProps> = ({ onFetchTitle }) => {
   const [inputText, setInputText] = useState<string>("");
+  const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const activeEnter = (e: any) => {
-    if(e.key === "Enter") {
-      e.preventDefault();
-      onFetchTitle(inputText);
+  const handleSubmit = () => {
+    if (!inputText.trim()) return;
+    if (inputRef.current) {
+      inputRef.current.value = "";
     }
-  }
-  const handleButtonClick = (e: any) => {
-    e.preventDefault();
     onFetchTitle(inputText);
+    setInputText("");
+  }
+
+  const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
   }
 
   return (
-  <div className="w-72 m-10 items-center content-center justify-center flex">
-  <div className="relative w-full min-w-[200px] h-10 flex flex-row">
-    <input
-      onChange={(e) => setInputText(e.target.value)}
-      onKeyDown={(e) => activeEnter(e)}
-      className="shadow-md peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-lg border-blue-gray-200 focus:border-sky-300"
-      placeholder=" " />
-    <label
-      className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-sky-300 after:border-blue-gray-200 peer-focus:after:!border-sky-300">URL
-    </label>
-  </div>
-  <button type="button" className="h-10 shadow-md peer items-center py-2.5 px-3 ms-2 text-white bg-[#1ED760] rounded-lg border focus:border-green-950" onClick={handleButtonClick}>
-        <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-        </svg>
-    </button>
-</div>  
+    <div className={`
+      w-full max-w-md m-8 flex gap-2 p-1.5 rounded-2xl transition-all duration-300
+      ${isFocused ? 'glass glow-spotify-sm' : 'glass'}
+    `}>
+      <div className="flex-1 flex items-center gap-3 px-4">
+        <Link className={`w-5 h-5 transition-colors duration-200 ${isFocused ? 'text-spotify' : 'text-muted-foreground'}`} />
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="Spotify URL을 입력하세요"
+          onChange={(e) => setInputText(e.target.value)}
+          onKeyDown={activeEnter}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          className="flex-1 bg-transparent border-none outline-none text-white placeholder:text-muted-foreground py-3"
+        />
+      </div>
+      <button
+        onClick={handleSubmit}
+        className="px-5 py-3 rounded-xl bg-spotify hover:bg-spotify-dark text-black font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] glow-spotify-sm flex items-center gap-2"
+      >
+        <Search className="w-4 h-4" />
+        <span className="hidden sm:inline">검색</span>
+      </button>
+    </div>
   )
 }

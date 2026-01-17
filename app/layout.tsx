@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Noto_Sans } from "next/font/google";
+import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
-const NotoSans = Noto_Sans({subsets:["latin"]})
+const notoSans = Noto_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Spotify info Copy",
-  description: "Put in Spotify songs url",
+  title: "Spotify Info Copy",
+  description: "Spotify 곡 URL에서 정보를 추출하고 복사하세요",
 };
 
 export default function RootLayout({
@@ -16,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={NotoSans.className}>{children}</body>
+    <html lang="ko">
+      <body className={notoSans.className}>{children}</body>
     </html>
   );
 }
