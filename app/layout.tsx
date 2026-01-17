@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
 
 const notoSans = Noto_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Spotify Info Copy",
-  description: "Spotify 곡 URL에서 정보를 추출하고 복사하세요",
+  description: "Extract and copy information from Spotify song URLs",
 };
 
 export default function RootLayout({
@@ -15,8 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body className={notoSans.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={notoSans.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

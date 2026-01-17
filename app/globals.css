@@ -4,29 +4,49 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 7%;
-    --foreground: 0 0% 95%;
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 141 76% 48%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 141 76% 48%;
-    --accent-foreground: 0 0% 0%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 20%;
-    --input: 0 0% 15%;
-    --ring: 141 76% 48%;
-    --radius: 0.75rem;
-  }
+:root {
+  --background: 0 0% 7%;
+  --foreground: 0 0% 95%;
+  --card: 0 0% 10%;
+  --card-foreground: 0 0% 95%;
+  --popover: 0 0% 10%;
+  --popover-foreground: 0 0% 95%;
+  --primary: 141 76% 48%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 95%;
+  --muted: 0 0% 18%;
+  --muted-foreground: 0 0% 60%;
+  --accent: 141 76% 48%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 20%;
+  --input: 0 0% 15%;
+  --ring: 141 76% 48%;
+  --radius: 0.75rem;
+}
+
+html.light {
+  --background: 140 30% 96%;
+  --foreground: 140 10% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 140 10% 15%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 140 10% 15%;
+  --primary: 141 76% 38%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 140 20% 90%;
+  --secondary-foreground: 140 10% 20%;
+  --muted: 140 15% 88%;
+  --muted-foreground: 140 5% 40%;
+  --accent: 141 76% 38%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 140 15% 82%;
+  --input: 140 20% 92%;
+  --ring: 141 76% 38%;
 }
 
 @layer base {
@@ -39,13 +59,24 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    background:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(30, 215, 96, 0.15), transparent),
-      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(30, 215, 96, 0.08), transparent),
-      hsl(var(--background));
+    @apply text-foreground antialiased;
     min-height: 100vh;
   }
+}
+
+html.dark body,
+html:not(.light) body {
+  background-color: hsl(0 0% 7%);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(30, 215, 96, 0.15), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(30, 215, 96, 0.08), transparent);
+}
+
+html.light body {
+  background-color: hsl(140 30% 96%);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(30, 215, 96, 0.1), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(30, 215, 96, 0.05), transparent);
 }
 
 @layer utilities {
@@ -71,10 +102,34 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
+  html.light .glass {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(30, 215, 96, 0.15);
+    box-shadow: 0 4px 24px rgba(30, 215, 96, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
   .glass-dark {
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  html.light .glow-spotify {
+    box-shadow:
+      0 0 25px rgba(30, 215, 96, 0.25),
+      0 0 50px rgba(30, 215, 96, 0.1),
+      0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  html.light .glow-spotify-sm {
+    box-shadow:
+      0 0 15px rgba(30, 215, 96, 0.2),
+      0 2px 10px rgba(0, 0, 0, 0.06);
+  }
+
+  html.light .glow-text {
+    text-shadow: 0 0 25px rgba(30, 215, 96, 0.4);
   }
 
   .noise {
