@@ -60,17 +60,17 @@ export const Info: React.FC<InfoProps> = ({ title, artist, imgURL }) => {
         <div className="flex gap-3">
           <button
             onClick={() => handleCopy(title, t("song"))}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground/90 font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground/90 font-medium text-sm whitespace-nowrap transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
-            <Music className="w-4 h-4" />
+            <Music className="w-4 h-4 shrink-0" />
             {t("song")}
           </button>
 
           <button
             onClick={() => handleCopy(artist, t("artist"))}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground/90 font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground/90 font-medium text-sm whitespace-nowrap transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           >
-            <User className="w-4 h-4" />
+            <User className="w-4 h-4 shrink-0" />
             {t("artist")}
           </button>
         </div>

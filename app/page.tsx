@@ -117,25 +117,25 @@ export default function Home() {
                       onClick={() =>
                         handleCopy(`${song.title} - ${song.artist}`, t("all"))
                       }
-                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-spotify/20 hover:bg-spotify/30 text-spotify transition-all duration-200 hover:glow-spotify-sm"
+                      className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-xs font-medium rounded-lg bg-spotify/20 hover:bg-spotify/30 text-spotify whitespace-nowrap transition-all duration-200 hover:glow-spotify-sm"
                     >
-                      <Copy className="w-3 h-3" />
+                      <Copy className="w-3 h-3 shrink-0" />
                       {t("all")}
                     </button>
 
                     <button
                       onClick={() => handleCopy(song.title, t("song"))}
-                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border bg-card hover:bg-muted hover:border-spotify/30 text-foreground transition-all duration-200"
+                      className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-xs font-medium rounded-lg border border-border bg-card hover:bg-muted hover:border-spotify/30 text-foreground whitespace-nowrap transition-all duration-200"
                     >
-                      <Music className="w-3 h-3" />
+                      <Music className="w-3 h-3 shrink-0" />
                       {t("song")}
                     </button>
 
                     <button
                       onClick={() => handleCopy(song.artist, t("artist"))}
-                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border bg-card hover:bg-muted hover:border-spotify/30 text-foreground transition-all duration-200"
+                      className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-xs font-medium rounded-lg border border-border bg-card hover:bg-muted hover:border-spotify/30 text-foreground whitespace-nowrap transition-all duration-200"
                     >
-                      <User className="w-3 h-3" />
+                      <User className="w-3 h-3 shrink-0" />
                       {t("artist")}
                     </button>
                   </div>
