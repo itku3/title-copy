@@ -10,12 +10,12 @@ const config: Config = {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ['Outfit', 'sans-serif'],
+  			body: ['Noto Sans', 'system-ui', 'sans-serif'],
+  			display: ['Noto Sans', 'system-ui', 'sans-serif'],
   		},
   		backgroundImage: {
   			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
   			'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-  			'spotify-gradient': 'linear-gradient(135deg, #1ED760 0%, #1DB954 50%, #169C46 100%)',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -24,11 +24,11 @@ const config: Config = {
   		},
   		colors: {
   			spotify: {
-  				DEFAULT: '#1ED760',
-  				light: '#1ED760',
-  				dark: '#169C46',
-  				muted: 'rgba(30, 215, 96, 0.1)',
-  				hover: 'rgba(30, 215, 96, 0.2)',
+  				DEFAULT: 'hsl(var(--accent))',
+  				light: 'hsl(var(--accent))',
+  				dark: 'hsl(var(--accent) / 0.8)',
+  				muted: 'hsl(var(--accent) / 0.1)',
+  				hover: 'hsl(var(--accent) / 0.2)',
   			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -72,11 +72,15 @@ const config: Config = {
   			}
   		},
   		animation: {
-  			'float': 'float 6s ease-in-out infinite',
-  			'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
-  			'slide-up': 'slide-up 0.5s ease-out',
-  			'fade-in': 'fade-in 0.4s ease-out',
-  			'scale-in': 'scale-in 0.3s ease-out',
+  			'float': 'float 8s ease-in-out infinite',
+  			'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
+  			'slide-up': 'slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+  			'fade-in': 'fade-in 0.5s ease-out forwards',
+  			'scale-in': 'scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+  			'reveal': 'reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+  		},
+  		transitionDuration: {
+  			'400': '400ms',
   		},
   	}
   },
