@@ -44,20 +44,28 @@ title-copy/
 
 ### 2. 복사 기능
 - 전체 정보 복사: `{제목} - {아티스트}`
-- 개별 복사: 제목만, 아티스트만
+- 개별 복사: 곡명만, 아티스트만
 - 네이티브 Clipboard API 사용 (`lib/clipboard.ts`)
 
 ### 3. History
 - 검색한 곡 목록 저장 (세션 내)
 - 각 항목에서 바로 복사 가능
 
-### 4. 다크/라이트 모드
+### 4. 뒤로가기 버튼
+- 곡 정보 표시 시 왼쪽 상단에 뒤로가기 버튼 표시
+- 클릭 시 메인 화면으로 복귀
+
+### 5. 앨범 자켓 이미지 보호
+- 우클릭 방지
+- 드래그 방지
+
+### 6. 다크/라이트 모드
 - `ThemeContext`로 상태 관리
 - `html` 요소에 `light`/`dark` 클래스 적용
 - localStorage에 설정 저장
 - 시스템 테마 자동 감지
 
-### 5. 다국어 지원 (i18n)
+### 7. 다국어 지원 (i18n)
 - 지원 언어: English, 한국어, 日本語
 - 브라우저 언어 자동 감지
 - localStorage에 설정 저장
@@ -68,11 +76,11 @@ title-copy/
 테마별 색상 변수가 `:root`와 `html.light`에 정의됨:
 - `--background`, `--foreground`: 배경/텍스트 색상
 - `--card`, `--muted`, `--border`: UI 요소 색상
-- `--primary`, `--accent`: Spotify 녹색 (#1ED760)
+- `--primary`, `--accent`: 파스텔 민트 그린 (다크: #6FC7A7, 라이트: #3B9B73)
 
 ### Custom Utilities
 - `.glass`: 글래스모피즘 효과
-- `.glow-spotify`: Spotify 녹색 글로우 효과
+- `.glow-accent`: 민트 그린 글로우 효과
 - `.glow-text`: 텍스트 글로우
 
 ## Commands
