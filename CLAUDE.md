@@ -18,6 +18,7 @@ title-copy/
 ├── app/
 │   ├── api/fetch/route.ts    # Spotify URL 스크래핑 API
 │   ├── components/
+│   │   ├── AlbumBackground.tsx # 블러 처리된 앨범 배경 컴포넌트
 │   │   ├── Info.tsx          # 곡 정보 카드 컴포넌트
 │   │   ├── InputLink.tsx     # URL 입력 컴포넌트
 │   │   └── Settings.tsx      # 테마/언어 설정 버튼
@@ -28,9 +29,11 @@ title-copy/
 ├── components/ui/            # shadcn/ui 컴포넌트
 ├── context/
 │   ├── ThemeContext.tsx      # 다크/라이트 모드 상태 관리
-│   └── LanguageContext.tsx   # 다국어 상태 관리
+│   ├── LanguageContext.tsx   # 다국어 상태 관리
+│   └── DynamicColorContext.tsx # 동적 색상 테마 상태 관리
 ├── lib/
 │   ├── clipboard.ts          # 클립보드 복사 유틸리티
+│   ├── color-extractor.ts    # 앨범 색상 추출 유틸리티
 │   ├── i18n.ts               # 번역 데이터 (EN/KO/JA)
 │   └── utils.ts              # cn() 유틸리티
 └── tailwind.config.ts        # Tailwind 설정
@@ -70,6 +73,18 @@ title-copy/
 - 브라우저 언어 자동 감지
 - localStorage에 설정 저장
 
+### 8. 동적 색상 테마 (Dynamic Color Theming)
+- 앨범 자켓에서 대표 색상 자동 추출
+- Canvas API를 사용한 클라이언트 사이드 색상 분석
+- 추출된 색상으로 UI 전체 테마 동적 변경
+- 부드러운 색상 전환 애니메이션
+
+### 9. 앨범 배경 효과
+- 앨범 자켓을 블러 처리하여 전체 배경으로 사용
+- 글래스모피즘 효과로 콘텐츠 가독성 유지
+- 라이트/다크 모드에 따른 적응형 밝기 조절
+- 부드러운 페이드 인/아웃 전환
+
 ## Styling
 
 ### CSS Variables (globals.css)
@@ -82,6 +97,9 @@ title-copy/
 - `.glass`: 글래스모피즘 효과
 - `.glow-accent`: 민트 그린 글로우 효과
 - `.glow-text`: 텍스트 글로우
+- `.album-bg`: 앨범 배경 블러 효과
+- `.album-bg-image`: 배경 이미지 스타일
+- `.album-bg-overlay`: 적응형 오버레이
 
 ## Commands
 
