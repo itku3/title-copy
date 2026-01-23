@@ -3,10 +3,12 @@ import { useState } from "react";
 import { Info } from "./components/Info";
 import { InputLink } from "./components/InputLink";
 import { Settings } from "./components/Settings";
+import { AlbumBackground } from "./components/AlbumBackground";
 import { Toaster, toast } from "sonner";
 import { Copy, Music, User, Clock, Disc3, ArrowLeft } from "lucide-react";
 import { copyToClipboard } from "@/lib/clipboard";
 import { useLanguage } from "@/context/LanguageContext";
+import { useDynamicColor } from "@/context/DynamicColorContext";
 
 interface SongData {
   title: string;
@@ -18,6 +20,7 @@ export default function Home() {
   const [currentSong, setCurrentSong] = useState<SongData | null>(null);
   const [history, setHistory] = useState<SongData[]>([]);
   const { t } = useLanguage();
+  const { extractAndApplyColors, resetColors } = useDynamicColor();
 
   const fetchTitle = async (url: string) => {
     try {
@@ -39,6 +42,7 @@ export default function Home() {
 
       setCurrentSong(songData);
       setHistory((prev) => [...prev, songData]);
+      extractAndApplyColors(data.imgURL);
     } catch {
       toast.error(t("requestFailed"), { description: t("networkError") });
     }
@@ -55,18 +59,26 @@ export default function Home() {
 
   return (
     <main className="min-h-screen relative overflow-hidden">
+      {/* Album art blurred background */}
+      <AlbumBackground imgURL={currentSong?.imgURL ?? null} />
+
       {/* Decorative background elements */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-accent/8 to-transparent blur-3xl" />
-        <div className="absolute bottom-[-30%] right-[-15%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-tl from-accent/5 to-transparent blur-3xl" />
-      </div>
+      {!currentSong && (
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-accent/8 to-transparent blur-3xl" />
+          <div className="absolute bottom-[-30%] right-[-15%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-tl from-accent/5 to-transparent blur-3xl" />
+        </div>
+      )}
 
       <Settings />
 
       {/* Back button */}
       {currentSong && (
         <button
-          onClick={() => setCurrentSong(null)}
+          onClick={() => {
+            setCurrentSong(null);
+            resetColors();
+          }}
           className="fixed top-6 left-6 z-50 w-10 h-10 flex items-center justify-center rounded-xl bg-card/80 backdrop-blur-sm border border-border/50 text-muted-foreground hover:text-accent hover:border-accent/30 transition-all duration-300"
         >
           <ArrowLeft className="w-5 h-5" />

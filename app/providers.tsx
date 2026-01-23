@@ -2,12 +2,15 @@
 
 import { ThemeProvider } from "@/context/ThemeContext";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { DynamicColorProvider } from "@/context/DynamicColorContext";
 import { ReactNode } from "react";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider>
-      <LanguageProvider>{children}</LanguageProvider>
+      <DynamicColorProvider>
+        <LanguageProvider>{children}</LanguageProvider>
+      </DynamicColorProvider>
     </ThemeProvider>
   );
 }
