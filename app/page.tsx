@@ -1,14 +1,16 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Info } from "./components/Info";
 import { InputLink } from "./components/InputLink";
 import { Settings } from "./components/Settings";
 import { AlbumBackground } from "./components/AlbumBackground";
 import { Toaster, toast } from "sonner";
-import { Copy, Music, User, Clock, Disc3, ArrowLeft } from "lucide-react";
+import { Copy, Music, User, Clock, Disc3, ArrowLeft, Trash2 } from "lucide-react";
 import { copyToClipboard } from "@/lib/clipboard";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDynamicColor } from "@/context/DynamicColorContext";
+
+const HISTORY_STORAGE_KEY = "spotify-copy-history";
 
 interface SongData {
   title: string;
@@ -21,6 +23,18 @@ export default function Home() {
   const [history, setHistory] = useState<SongData[]>([]);
   const { t } = useLanguage();
   const { extractAndApplyColors, resetColors } = useDynamicColor();
+
+  // localStorage에서 히스토리 로드
+  useEffect(() => {
+    const saved = localStorage.getItem(HISTORY_STORAGE_KEY);
+    if (saved) {
+      try {
+        setHistory(JSON.parse(saved));
+      } catch {
+        // 파싱 실패 시 무시
+      }
+    }
+  }, []);
 
   const fetchTitle = async (url: string) => {
     try {
@@ -41,7 +55,11 @@ export default function Home() {
       };
 
       setCurrentSong(songData);
-      setHistory((prev) => [...prev, songData]);
+      setHistory((prev) => {
+        const newHistory = [...prev, songData];
+        localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(newHistory));
+        return newHistory;
+      });
       extractAndApplyColors(data.imgURL);
     } catch {
       toast.error(t("requestFailed"), { description: t("networkError") });
@@ -55,6 +73,11 @@ export default function Home() {
         description: text,
       });
     }
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    localStorage.removeItem(HISTORY_STORAGE_KEY);
   };
 
   return (
@@ -138,6 +161,13 @@ export default function Home() {
               <span className="ml-auto text-sm text-muted-foreground font-medium bg-muted/50 px-3 py-1 rounded-full">
                 {history.length}
               </span>
+              <button
+                onClick={clearHistory}
+                className="w-8 h-8 rounded-xl flex items-center justify-center text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-all duration-300"
+                title="Clear history"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
             </div>
 
             <ul className="space-y-3 max-h-72 overflow-y-auto pr-1">
