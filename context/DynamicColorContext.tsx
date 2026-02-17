@@ -6,6 +6,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useMemo,
   ReactNode,
   useRef,
 } from "react";
@@ -88,10 +89,13 @@ export const DynamicColorProvider = ({ children }: { children: ReactNode }) => {
     root.style.removeProperty("--spotify-rgb");
   }, []);
 
+  const value = useMemo(
+    () => ({ extractAndApplyColors, resetColors, isExtracting }),
+    [extractAndApplyColors, resetColors, isExtracting]
+  );
+
   return (
-    <DynamicColorContext.Provider
-      value={{ extractAndApplyColors, resetColors, isExtracting }}
-    >
+    <DynamicColorContext.Provider value={value}>
       {children}
     </DynamicColorContext.Provider>
   );

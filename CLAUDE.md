@@ -51,7 +51,7 @@ title-copy/
 - 네이티브 Clipboard API 사용 (`lib/clipboard.ts`)
 
 ### 3. History
-- 검색한 곡 목록 저장 (세션 내)
+- 검색한 곡 목록 localStorage에 영구 저장
 - 각 항목에서 바로 복사 가능
 
 ### 4. 뒤로가기 버튼
@@ -101,13 +101,30 @@ title-copy/
 - `.album-bg-image`: 배경 이미지 스타일
 - `.album-bg-overlay`: 적응형 오버레이
 
+## Performance Patterns
+
+### Context 최적화
+- 모든 Context Provider의 value를 `useMemo`로 메모이제이션
+- 콜백 함수는 `useCallback`으로 래핑하여 stable reference 유지
+- 적용 파일: `ThemeContext`, `LanguageContext`, `DynamicColorContext`
+
+### 컴포넌트 최적화
+- 자식 컴포넌트는 `React.memo`로 래핑 (`Info`, `InputLink`, `Settings`, `AlbumBackground`)
+- props로 전달되는 핸들러는 `useCallback`으로 래핑
+- 정적 JSX는 모듈 레벨로 호이스팅 (장식용 배경 등)
+- `useState` lazy initialization으로 localStorage 로드 (page.tsx)
+- 파생 데이터는 `useMemo`로 캐싱 (역순 히스토리 등)
+
+### Effect Cleanup
+- `AlbumBackground`: cancelled 플래그 + clearTimeout으로 언마운트 후 state 업데이트 방지
+- `Settings`: mousedown 리스너에 `{ passive: true }` 적용
+
 ## Commands
 
 ```bash
 npm run dev      # 개발 서버 (http://localhost:3000)
 npm run build    # 프로덕션 빌드
 npm run start    # 프로덕션 서버
-npm run lint     # ESLint 검사
 ```
 
 ## Deployment

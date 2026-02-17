@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Info } from "./components/Info";
 import { InputLink } from "./components/InputLink";
 import { Settings } from "./components/Settings";
@@ -18,25 +18,34 @@ interface SongData {
   imgURL: string;
 }
 
+// 정적 JSX 호이스팅 - 장식용 그라데이션 blob
+const DecorativeBackground = (
+  <div className="fixed inset-0 pointer-events-none">
+    <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-accent/8 to-transparent blur-3xl" />
+    <div className="absolute bottom-[-30%] right-[-15%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-tl from-accent/5 to-transparent blur-3xl" />
+  </div>
+);
+
 export default function Home() {
   const [currentSong, setCurrentSong] = useState<SongData | null>(null);
-  const [history, setHistory] = useState<SongData[]>([]);
+  const [history, setHistory] = useState<SongData[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const saved = localStorage.getItem(HISTORY_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
   const { t } = useLanguage();
   const { extractAndApplyColors, resetColors } = useDynamicColor();
 
-  // localStorage에서 히스토리 로드
+  // localStorage에 히스토리 저장
   useEffect(() => {
-    const saved = localStorage.getItem(HISTORY_STORAGE_KEY);
-    if (saved) {
-      try {
-        setHistory(JSON.parse(saved));
-      } catch {
-        // 파싱 실패 시 무시
-      }
-    }
-  }, []);
+    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+  }, [history]);
 
-  const fetchTitle = async (url: string) => {
+  const fetchTitle = useCallback(async (url: string) => {
     try {
       const response = await fetch(
         `/api/fetch?url=${encodeURIComponent(url)}`
@@ -55,30 +64,36 @@ export default function Home() {
       };
 
       setCurrentSong(songData);
-      setHistory((prev) => {
-        const newHistory = [...prev, songData];
-        localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(newHistory));
-        return newHistory;
-      });
+      setHistory((prev) => [...prev, songData]);
       extractAndApplyColors(data.imgURL);
     } catch {
       toast.error(t("requestFailed"), { description: t("networkError") });
     }
-  };
+  }, [t, extractAndApplyColors]);
 
-  const handleCopy = async (text: string, label: string) => {
+  const handleCopy = useCallback(async (text: string, label: string) => {
     const success = await copyToClipboard(text);
     if (success) {
       toast.success(`${label} ${t("copied")}`, {
         description: text,
       });
     }
-  };
+  }, [t]);
 
-  const clearHistory = () => {
+  const clearHistory = useCallback(() => {
     setHistory([]);
-    localStorage.removeItem(HISTORY_STORAGE_KEY);
-  };
+  }, []);
+
+  const handleBack = useCallback(() => {
+    setCurrentSong(null);
+    resetColors();
+  }, [resetColors]);
+
+  // 역순 히스토리 메모이제이션 + stable key
+  const reversedHistory = useMemo(
+    () => history.map((song, i) => ({ song, originalIndex: i })).reverse(),
+    [history]
+  );
 
   return (
     <main className="min-h-screen relative overflow-hidden">
@@ -86,22 +101,14 @@ export default function Home() {
       <AlbumBackground imgURL={currentSong?.imgURL ?? null} />
 
       {/* Decorative background elements */}
-      {!currentSong && (
-        <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-accent/8 to-transparent blur-3xl" />
-          <div className="absolute bottom-[-30%] right-[-15%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-tl from-accent/5 to-transparent blur-3xl" />
-        </div>
-      )}
+      {!currentSong && DecorativeBackground}
 
       <Settings />
 
       {/* Back button */}
       {currentSong && (
         <button
-          onClick={() => {
-            setCurrentSong(null);
-            resetColors();
-          }}
+          onClick={handleBack}
           className="fixed top-6 left-6 z-50 w-10 h-10 flex items-center justify-center rounded-xl bg-card/80 backdrop-blur-sm border border-border/50 text-muted-foreground hover:text-accent hover:border-accent/30 transition-all duration-300"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -171,9 +178,9 @@ export default function Home() {
             </div>
 
             <ul className="space-y-3 max-h-72 overflow-y-auto pr-1">
-              {[...history].reverse().map((song, index) => (
+              {reversedHistory.map(({ song, originalIndex }) => (
                 <li
-                  key={index}
+                  key={originalIndex}
                   className="group p-4 rounded-2xl bg-background/50 border border-border/30 hover:border-accent/30 hover:bg-accent/5 transition-all duration-300"
                 >
                   <div className="flex items-start gap-3 mb-3">

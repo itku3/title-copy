@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Sun, Moon, Languages, Check } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -12,7 +13,7 @@ const languages: { code: Locale; label: string; native: string }[] = [
   { code: "ja", label: "日本語", native: "JA" },
 ];
 
-export const Settings = () => {
+export const Settings = React.memo(() => {
   const { theme, toggleTheme } = useTheme();
   const { locale, setLocale } = useLanguage();
   const [showLangMenu, setShowLangMenu] = useState(false);
@@ -25,7 +26,7 @@ export const Settings = () => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside, { passive: true });
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
@@ -104,4 +105,6 @@ export const Settings = () => {
       </div>
     </div>
   );
-};
+});
+
+Settings.displayName = "Settings";

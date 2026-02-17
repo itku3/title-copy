@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { Search, Link2, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -7,26 +7,26 @@ interface InputLinkProps {
   onFetchTitle: (url: string) => void;
 }
 
-export const InputLink: React.FC<InputLinkProps> = ({ onFetchTitle }) => {
+export const InputLink: React.FC<InputLinkProps> = React.memo(({ onFetchTitle }) => {
   const [inputText, setInputText] = useState<string>("");
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useLanguage();
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (!inputText.trim()) return;
     if (inputRef.current) {
       inputRef.current.value = "";
     }
     onFetchTitle(inputText);
     setInputText("");
-  };
+  }, [inputText, onFetchTitle]);
 
-  const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const activeEnter = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSubmit();
     }
-  };
+  }, [handleSubmit]);
 
   return (
     <div className="w-full max-w-lg my-10 animate-slide-up stagger-2">
@@ -92,4 +92,6 @@ export const InputLink: React.FC<InputLinkProps> = ({ onFetchTitle }) => {
       </div>
     </div>
   );
-};
+});
+
+InputLink.displayName = "InputLink";

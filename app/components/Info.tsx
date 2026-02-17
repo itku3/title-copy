@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useCallback } from "react";
 import { toast } from "sonner";
 import { Copy, Music, User, Sparkles } from "lucide-react";
 import { copyToClipboard } from "@/lib/clipboard";
@@ -12,18 +12,18 @@ interface InfoProps {
   imgURL: string;
 }
 
-export const Info: React.FC<InfoProps> = ({ title, artist, imgURL }) => {
+export const Info: React.FC<InfoProps> = React.memo(({ title, artist, imgURL }) => {
   const info = `${title} - ${artist}`;
   const { t } = useLanguage();
 
-  const handleCopy = async (text: string, label: string) => {
+  const handleCopy = useCallback(async (text: string, label: string) => {
     const success = await copyToClipboard(text);
     if (success) {
       toast.success(`${label} ${t("copied")}`, {
         description: text,
       });
     }
-  };
+  }, [t]);
 
   if (!title || !artist || !imgURL) return null;
 
@@ -102,4 +102,6 @@ export const Info: React.FC<InfoProps> = ({ title, artist, imgURL }) => {
       </div>
     </div>
   );
-};
+});
+
+Info.displayName = "Info";

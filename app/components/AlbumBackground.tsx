@@ -1,31 +1,44 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from "@/context/ThemeContext";
 
 interface AlbumBackgroundProps {
   imgURL: string | null;
 }
 
-export const AlbumBackground: React.FC<AlbumBackgroundProps> = ({ imgURL }) => {
+export const AlbumBackground: React.FC<AlbumBackgroundProps> = React.memo(({ imgURL }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentImg, setCurrentImg] = useState<string | null>(null);
   const { theme } = useTheme();
 
   useEffect(() => {
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
     if (imgURL) {
       setIsLoaded(false);
       const img = new Image();
       img.crossOrigin = "anonymous";
       img.onload = () => {
+        if (cancelled) return;
         setCurrentImg(imgURL);
-        setTimeout(() => setIsLoaded(true), 50);
+        timeoutId = setTimeout(() => {
+          if (!cancelled) setIsLoaded(true);
+        }, 50);
       };
       img.src = imgURL;
     } else {
       setIsLoaded(false);
-      setTimeout(() => setCurrentImg(null), 500);
+      timeoutId = setTimeout(() => {
+        if (!cancelled) setCurrentImg(null);
+      }, 500);
     }
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
   }, [imgURL]);
 
   if (!currentImg) return null;
@@ -52,4 +65,6 @@ export const AlbumBackground: React.FC<AlbumBackgroundProps> = ({ imgURL }) => {
       />
     </div>
   );
-};
+});
+
+AlbumBackground.displayName = "AlbumBackground";
