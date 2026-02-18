@@ -7,13 +7,18 @@ interface AlbumBackgroundProps {
   imgURL: string | null;
 }
 
+// [rerender-memo] React.memo로 래핑하여 imgURL이 바뀔 때만 리렌더링
+// → 부모(page.tsx)가 다른 state 변경으로 리렌더링되어도 배경 컴포넌트는 재실행되지 않음
 export const AlbumBackground: React.FC<AlbumBackgroundProps> = React.memo(({ imgURL }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentImg, setCurrentImg] = useState<string | null>(null);
   const { theme } = useTheme();
 
   useEffect(() => {
+    // [Effect Cleanup] cancelled 플래그로 언마운트 후 비동기 콜백의 setState 호출을 방지
+    // → 이미지 로드 완료 전에 컴포넌트가 언마운트되면 "Can't perform state update on unmounted component" 경고 방지
     let cancelled = false;
+    // clearTimeout을 위해 timeoutId를 클로저 외부에 선언
     let timeoutId: ReturnType<typeof setTimeout>;
 
     if (imgURL) {
@@ -36,6 +41,7 @@ export const AlbumBackground: React.FC<AlbumBackgroundProps> = React.memo(({ img
     }
 
     return () => {
+      // cleanup: cancelled 플래그 설정 + 대기 중인 타이머 취소
       cancelled = true;
       clearTimeout(timeoutId);
     };

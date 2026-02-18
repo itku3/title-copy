@@ -7,12 +7,15 @@ interface InputLinkProps {
   onFetchTitle: (url: string) => void;
 }
 
+// [rerender-memo] React.memo로 래핑하여 onFetchTitle props가 바뀔 때만 리렌더링
+// → page.tsx에서 onFetchTitle을 useCallback으로 전달하므로 불필요한 리렌더링 방지
 export const InputLink: React.FC<InputLinkProps> = React.memo(({ onFetchTitle }) => {
   const [inputText, setInputText] = useState<string>("");
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useLanguage();
 
+  // [rerender-memo] 제출 핸들러 메모이제이션 - inputText, onFetchTitle 변경 시에만 재생성
   const handleSubmit = useCallback(() => {
     if (!inputText.trim()) return;
     if (inputRef.current) {
@@ -22,6 +25,7 @@ export const InputLink: React.FC<InputLinkProps> = React.memo(({ onFetchTitle })
     setInputText("");
   }, [inputText, onFetchTitle]);
 
+  // [rerender-memo] Enter키 핸들러도 메모이제이션 - handleSubmit이 안정적이면 함께 안정적
   const activeEnter = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSubmit();

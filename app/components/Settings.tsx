@@ -13,6 +13,8 @@ const languages: { code: Locale; label: string; native: string }[] = [
   { code: "ja", label: "日本語", native: "JA" },
 ];
 
+// [rerender-memo] React.memo로 래핑하여 테마/언어가 변경될 때만 리렌더링
+// → props를 받지 않으므로 부모 리렌더링 시 항상 리렌더링되는 문제를 방지
 export const Settings = React.memo(() => {
   const { theme, toggleTheme } = useTheme();
   const { locale, setLocale } = useLanguage();
@@ -26,6 +28,9 @@ export const Settings = React.memo(() => {
       }
     };
 
+    // [client-passive-event-listeners] passive: true로 이벤트 리스너 등록
+    // → 브라우저에게 이 핸들러가 preventDefault()를 호출하지 않음을 알려,
+    //   스크롤/터치 이벤트 처리 시 렌더링 스레드가 리스너 완료를 기다리지 않아도 됨
     document.addEventListener("mousedown", handleClickOutside, { passive: true });
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);

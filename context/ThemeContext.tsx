@@ -56,11 +56,18 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [theme, mounted, isManual]);
 
+  // [rerender-memo] useCallback으로 toggleTheme을 안정적인 참조로 유지
+  // → 의존성이 없으므로 Provider가 리렌더링되어도 같은 함수 참조를 전달
   const toggleTheme = useCallback(() => {
     setIsManual(true);
+    // [rerender-functional-setstate] 함수형 업데이트로 prev 기반 토글
+    // → 현재 state를 의존성으로 캡처하지 않아도 되므로 useCallback 의존성 배열이 비어있어도 안전
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   }, []);
 
+  // [rerender-memo] Context value를 useMemo로 메모이제이션
+  // → theme이나 toggleTheme이 바뀔 때만 새 객체를 생성하여
+  //   Context를 구독하는 모든 컴포넌트의 불필요한 리렌더링을 방지
   const value = useMemo(() => ({ theme, toggleTheme }), [theme, toggleTheme]);
 
   if (!mounted) {

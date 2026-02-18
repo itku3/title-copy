@@ -18,7 +18,9 @@ interface SongData {
   imgURL: string;
 }
 
-// 정적 JSX 호이스팅 - 장식용 그라데이션 blob
+// [rendering-hoist-jsx] 컴포넌트 외부로 정적 JSX를 호이스팅
+// → 렌더링마다 동일한 JSX 객체를 재생성하는 비용을 없애고,
+//   React reconciler가 동일 참조임을 인식하여 불필요한 diff를 건너뜀
 const DecorativeBackground = (
   <div className="fixed inset-0 pointer-events-none">
     <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-accent/8 to-transparent blur-3xl" />
@@ -28,6 +30,9 @@ const DecorativeBackground = (
 
 export default function Home() {
   const [currentSong, setCurrentSong] = useState<SongData | null>(null);
+  // [rerender-lazy-state-init] useState에 초기화 함수(lazy initializer)를 전달
+  // → 함수를 직접 실행하지 않고 함수 참조를 전달하므로,
+  //   최초 마운트 시에만 localStorage를 읽고 이후 렌더링에서는 실행되지 않음
   const [history, setHistory] = useState<SongData[]>(() => {
     if (typeof window === "undefined") return [];
     try {
@@ -45,6 +50,9 @@ export default function Home() {
     localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
   }, [history]);
 
+  // [rerender-memo] useCallback으로 핸들러를 메모이제이션
+  // → InputLink(React.memo)에 props로 전달될 때 참조 동일성을 보장하여
+  //   부모 렌더링 시 자식 컴포넌트의 불필요한 리렌더링을 방지
   const fetchTitle = useCallback(async (url: string) => {
     try {
       const response = await fetch(
@@ -71,6 +79,9 @@ export default function Home() {
     }
   }, [t, extractAndApplyColors]);
 
+  // [rerender-functional-setstate] 히스토리 항목 추가 시 함수형 setState 사용(fetchTitle 내부)
+  // → prev 참조를 직접 받아 최신 상태 기반으로 업데이트하므로 stale closure 문제 없음
+  // [rerender-memo] 복사 핸들러 메모이제이션 - t 의존성만 있어 언어 변경 시에만 재생성
   const handleCopy = useCallback(async (text: string, label: string) => {
     const success = await copyToClipboard(text);
     if (success) {
@@ -80,6 +91,7 @@ export default function Home() {
     }
   }, [t]);
 
+  // [rerender-memo] 의존성이 없는 핸들러는 빈 배열로 한 번만 생성
   const clearHistory = useCallback(() => {
     setHistory([]);
   }, []);
@@ -89,7 +101,9 @@ export default function Home() {
     resetColors();
   }, [resetColors]);
 
-  // 역순 히스토리 메모이제이션 + stable key
+  // [rerender-derived-state] 파생 데이터(역순 목록)를 useMemo로 캐싱
+  // → history가 바뀔 때만 재계산하고, originalIndex를 key로 사용하여
+  //   React가 항목 추가/삭제를 정확하게 추적할 수 있도록 stable key 보장
   const reversedHistory = useMemo(
     () => history.map((song, i) => ({ song, originalIndex: i })).reverse(),
     [history]

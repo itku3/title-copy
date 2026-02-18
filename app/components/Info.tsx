@@ -12,10 +12,13 @@ interface InfoProps {
   imgURL: string;
 }
 
+// [rerender-memo] React.memo로 래핑하여 props(title, artist, imgURL)가 변경될 때만 리렌더링
 export const Info: React.FC<InfoProps> = React.memo(({ title, artist, imgURL }) => {
   const info = `${title} - ${artist}`;
   const { t } = useLanguage();
 
+  // [rerender-memo] 복사 핸들러를 useCallback으로 메모이제이션
+  // → t(번역 함수)가 바뀔 때만 재생성; 언어 미변경 시 동일 참조 유지
   const handleCopy = useCallback(async (text: string, label: string) => {
     const success = await copyToClipboard(text);
     if (success) {
