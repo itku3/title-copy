@@ -9,7 +9,7 @@ import { useLanguage } from "@/context/LanguageContext";
 interface InfoProps {
   title: string;
   artist: string;
-  imgURL: string;
+  imgURL: string | null;
 }
 
 // [rerender-memo] React.memo로 래핑하여 props(title, artist, imgURL)가 변경될 때만 리렌더링
@@ -28,7 +28,7 @@ export const Info: React.FC<InfoProps> = React.memo(({ title, artist, imgURL }) 
     }
   }, [t]);
 
-  if (!title || !artist || !imgURL) return null;
+  if (!title || !artist) return null;
 
   return (
     <div className="relative group">
@@ -45,16 +45,22 @@ export const Info: React.FC<InfoProps> = React.memo(({ title, artist, imgURL }) 
           <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-accent/40 rounded-br-lg" />
 
           <div className="relative overflow-hidden rounded-2xl">
-            <Image
-              onContextMenu={(e) => e.preventDefault()}
-              onDragStart={(e) => e.preventDefault()}
-              draggable={false}
-              className="relative shadow-2xl transition-transform duration-700 group-hover:scale-105 select-none"
-              src={imgURL}
-              alt={title}
-              width={320}
-              height={320}
-            />
+            {imgURL ? (
+              <Image
+                onContextMenu={(e) => e.preventDefault()}
+                onDragStart={(e) => e.preventDefault()}
+                draggable={false}
+                className="relative shadow-2xl transition-transform duration-700 group-hover:scale-105 select-none"
+                src={imgURL}
+                alt={title}
+                width={320}
+                height={320}
+              />
+            ) : (
+              <div className="w-[320px] h-[320px] flex items-center justify-center bg-muted rounded-2xl">
+                <Music className="w-16 h-16 text-muted-foreground/40" />
+              </div>
+            )}
           </div>
         </div>
 

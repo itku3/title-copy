@@ -11,11 +11,12 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useDynamicColor } from "@/context/DynamicColorContext";
 
 const HISTORY_STORAGE_KEY = "spotify-copy-history";
+const HISTORY_MAX = 50;
 
 interface SongData {
   title: string;
   artist: string;
-  imgURL: string;
+  imgURL: string | null;
 }
 
 // [rendering-hoist-jsx] 컴포넌트 외부로 정적 JSX를 호이스팅
@@ -47,8 +48,12 @@ export default function Home() {
 
   // localStorage에 히스토리 저장
   useEffect(() => {
-    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
-  }, [history]);
+    try {
+      localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+    } catch {
+      toast.error(t("errorOccurred"), { description: "히스토리를 저장할 수 없습니다." });
+    }
+  }, [history, t]);
 
   // [rerender-memo] useCallback으로 핸들러를 메모이제이션
   // → InputLink(React.memo)에 props로 전달될 때 참조 동일성을 보장하여
@@ -72,7 +77,7 @@ export default function Home() {
       };
 
       setCurrentSong(songData);
-      setHistory((prev) => [...prev, songData]);
+      setHistory((prev) => [...prev, songData].slice(-HISTORY_MAX));
       extractAndApplyColors(data.imgURL);
     } catch {
       toast.error(t("requestFailed"), { description: t("networkError") });
