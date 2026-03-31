@@ -1,7 +1,16 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+
+const notoSans = Noto_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "900"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-noto-sans",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://title-copy.vercel.app"),
@@ -60,11 +69,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
+    <html lang="en" suppressHydrationWarning className={notoSans.variable}>
       <body className="font-body">
         <Providers>{children}</Providers>
         <Analytics />

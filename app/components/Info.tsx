@@ -35,7 +35,7 @@ export const Info: React.FC<InfoProps> = React.memo(({ title, artist, imgURL }) 
       {/* Animated background glow */}
       <div className="absolute -inset-4 bg-accent/20 rounded-[2.5rem] blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500 animate-pulse-soft" />
 
-      <div className="relative neo-card rounded-[2rem] p-4 sm:p-7 w-full max-w-xs sm:max-w-sm glow-accent hover-lift">
+      <div className="relative neo-card rounded-[2rem] p-4 sm:p-7 w-full max-w-xs sm:max-w-sm hover-lift">
         {/* Album art section */}
         <div className="relative mb-7">
           {/* Decorative corner accents */}

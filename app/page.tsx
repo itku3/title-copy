@@ -31,29 +31,30 @@ const DecorativeBackground = (
 
 export default function Home() {
   const [currentSong, setCurrentSong] = useState<SongData | null>(null);
-  // [rerender-lazy-state-init] useState에 초기화 함수(lazy initializer)를 전달
-  // → 함수를 직접 실행하지 않고 함수 참조를 전달하므로,
-  //   최초 마운트 시에만 localStorage를 읽고 이후 렌더링에서는 실행되지 않음
-  const [history, setHistory] = useState<SongData[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const saved = localStorage.getItem(HISTORY_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [history, setHistory] = useState<SongData[]>([]);
+  // 서버/클라이언트 hydration 불일치 방지: 마운트 후에만 localStorage를 읽음
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const { t } = useLanguage();
   const { extractAndApplyColors, resetColors } = useDynamicColor();
 
-  // localStorage에 히스토리 저장
+  // 마운트 후 localStorage에서 히스토리 로드
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem(HISTORY_STORAGE_KEY);
+      if (saved) setHistory(JSON.parse(saved));
+    } catch {}
+    setHistoryLoaded(true);
+  }, []);
+
+  // localStorage에 히스토리 저장 (로드 완료 후에만 실행하여 빈 배열로 덮어쓰기 방지)
+  useEffect(() => {
+    if (!historyLoaded) return;
     try {
       localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
     } catch {
       toast.error(t("errorOccurred"), { description: "히스토리를 저장할 수 없습니다." });
     }
-  }, [history, t]);
+  }, [history, t, historyLoaded]);
 
   // [rerender-memo] useCallback으로 핸들러를 메모이제이션
   // → InputLink(React.memo)에 props로 전달될 때 참조 동일성을 보장하여
