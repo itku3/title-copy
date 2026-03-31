@@ -56,12 +56,17 @@ export const InputLink: React.FC<InputLinkProps> = React.memo(({ onFetchTitle })
         />
 
         <div className="flex-1 flex items-center gap-3 px-4">
+          <label htmlFor="spotify-url-input" className="sr-only">
+            {t("placeholder")}
+          </label>
           <Link2
             className={`w-5 h-5 shrink-0 transition-all duration-300 ${
               isFocused ? "text-accent rotate-[-15deg]" : "text-muted-foreground"
             }`}
+            aria-hidden="true"
           />
           <input
+            id="spotify-url-input"
             ref={inputRef}
             type="text"
             placeholder={t("placeholder")}

@@ -35,7 +35,7 @@ export const Info: React.FC<InfoProps> = React.memo(({ title, artist, imgURL }) 
       {/* Animated background glow */}
       <div className="absolute -inset-4 bg-accent/20 rounded-[2.5rem] blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500 animate-pulse-soft" />
 
-      <div className="relative neo-card rounded-[2rem] p-7 glow-accent hover-lift">
+      <div className="relative neo-card rounded-[2rem] p-4 sm:p-7 w-full max-w-xs sm:max-w-sm glow-accent hover-lift">
         {/* Album art section */}
         <div className="relative mb-7">
           {/* Decorative corner accents */}
@@ -50,14 +50,15 @@ export const Info: React.FC<InfoProps> = React.memo(({ title, artist, imgURL }) 
                 onContextMenu={(e) => e.preventDefault()}
                 onDragStart={(e) => e.preventDefault()}
                 draggable={false}
-                className="relative shadow-2xl transition-transform duration-700 group-hover:scale-105 select-none"
+                className="relative w-full h-auto shadow-2xl transition-transform duration-700 group-hover:scale-105 select-none"
                 src={imgURL}
-                alt={title}
+                alt={`${title} 앨범 아트`}
                 width={320}
                 height={320}
+                sizes="(max-width: 375px) calc(100vw - 4rem), 320px"
               />
             ) : (
-              <div className="w-[320px] h-[320px] flex items-center justify-center bg-muted rounded-2xl">
+              <div className="w-full aspect-square flex items-center justify-center bg-muted rounded-2xl">
                 <Music className="w-16 h-16 text-muted-foreground/40" />
               </div>
             )}
@@ -72,10 +73,13 @@ export const Info: React.FC<InfoProps> = React.memo(({ title, artist, imgURL }) 
               Now Playing
             </span>
           </div>
-          <h2 className="font-display italic text-2xl text-foreground mb-2 truncate max-w-[300px] mx-auto">
+          <h2
+            className="font-display italic text-2xl text-foreground mb-2 line-clamp-2 mx-auto"
+            title={title}
+          >
             {title}
           </h2>
-          <p className="text-muted-foreground truncate max-w-[300px] mx-auto">
+          <p className="text-muted-foreground line-clamp-2 mx-auto" title={artist}>
             {artist}
           </p>
         </div>

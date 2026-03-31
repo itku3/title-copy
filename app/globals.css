@@ -464,3 +464,27 @@ html.light::after {
 /* Legacy class compatibility */
 .glow-spotify { @apply glow-accent; }
 .glow-spotify-sm { @apply glow-accent-sm; }
+
+/* Accessibility: 모션 민감 사용자 대응 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-slide-up,
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
